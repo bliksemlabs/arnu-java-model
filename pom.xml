@@ -44,11 +44,12 @@
         <arnuBranch>master</arnuBranch>
         <arnuGithubUrl>https://github.com/StichtingOpenGeo/${arnuRepoName}</arnuGithubUrl>
         <arnuVersion>2.0</arnuVersion>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <assertj.core.version>3.4.1</assertj.core.version>
         <junit.version>4.12</junit.version>
         <jaxb.fluent.api.version>2.1.8</jaxb.fluent.api.version>
         <cxf.xjc.plugin.version>3.0.5</cxf.xjc.plugin.version>
+        <cxf.version>3.0.5</cxf.version>
         <xjc.guava.plugin.version>0.3.1</xjc.guava.plugin.version>
         <jaxb.java.time.adapters.version>1.1.3</jaxb.java.time.adapters.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -70,7 +71,7 @@
     </organization>
 
     <!--
-	<distributionManagement>
+    <distributionManagement>
         <snapshotRepository>
             <id>Nexus</id>
             <url>https://nexus.rutebanken.org/content/repositories/snapshots</url>
@@ -151,7 +152,7 @@
                             <executable>./bin/download-extract.sh</executable>
                         </configuration>
                     </execution>
-					<!--
+                    <!--
                     <execution>
                         <id>replace-hard-coded-id-in-bindings-file</id>
                         <phase>generate-sources</phase>
@@ -167,7 +168,7 @@
                             </executable>
                         </configuration>
                     </execution>
-					-->
+                    -->
                     <execution>
                         <id>annotation-removal</id>
                         <phase>generate-sources</phase>
@@ -185,12 +186,12 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-xjc-plugin</artifactId>
-                <version>${cxf.xjc.plugin.version}</version>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>${cxf.version}</version>
                 <configuration>
                     <extensions>
                         <extension>net.java.dev.jaxb2-commons:jaxb-fluent-api:${jaxb.fluent.api.version}</extension>
-						<extension>org.apache.cxf.xjcplugins:cxf-xjc-ts:${cxf-xjc.version}</extension>
+                        <extension>org.apache.cxf.xjcplugins:cxf-xjc-ts:${cxf-xjc.version}</extension>
                     </extensions>
                 </configuration>
                 <executions>
@@ -198,23 +199,24 @@
                         <id>generate-sources-for-arnu</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>xsdtojava</goal>
+                            <goal>wsdl2java</goal>
                         </goals>
                         <configuration>
-                            <xsdOptions>
+                            <defaultOptions>
+                                <bindingFile>bindings.xjb</bindingFile>
+                            </defaultOptions>
+                            <wsdlOptions>
                                 <xsdOption>
-                                    <xsd>
-                                        ${basedir}/src/main/resources/xsd/${arnuVersion}/si_int_${arnuVersion}-ServiceInfo.xsd
-                                    </xsd>
-                                    <extension>true</extension>
-                                    <bindingFile>bindings.xjb</bindingFile>
-                                    <extensionArgs>
-                                        <extensionArg>-Xbug986</extensionArg>
-                                        <extensionArg>-Xfluent-api</extensionArg>
-                                        <extensionArg>-Xts:style:org.rutebanken.netex.OmitNullsToStringStyle.INSTANCE</extensionArg>
-                                    </extensionArgs>
+                                    <wsdl>
+                                        ${basedir}/src/main/resources/xsd/${arnuVersion}/HPJourneyPlannerServiceInfo.wsdl
+                                    </wsdl>
+                                    <extraargs>
+                                        <extraarg>-xjcbug986</extraarg>
+                                        <extraarg>-xjcfluent-api</extraarg>
+                                        <extraarg>-xjcts:style:org.rutebanken.netex.OmitNullsToStringStyle.INSTANCE</extraarg>
+                                    </extraargs>
                                 </xsdOption>
-                            </xsdOptions>
+                            </wsdlOptions>
                         </configuration>
                     </execution>
                 </executions>

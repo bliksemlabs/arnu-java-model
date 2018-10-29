@@ -14,10 +14,4 @@
 
 	<!-- See the script bin/version_updater.sh It updates version in schema locations-->
 
-	<jxb:bindings schemaLocation="./src/main/resources/xsd/2.0/si_int_2.0-ServiceInfo.xsd">
-		<jxb:schemaBindings>
-			<jxb:package name="nl.ttsolutions.ns.rti" />
-		</jxb:schemaBindings>
-	</jxb:bindings>
-
 </jxb:bindings>
